@@ -20,6 +20,5 @@ public class City : BaseEntity
     public Department Departments { get; set; }
 
     /* --------------------------------- */
-
-    public ICollection<ClientAddress> ClientAddresses { get; set; }
+    public ClientAddress ClientAddresses { get; set; }
 }

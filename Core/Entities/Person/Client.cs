@@ -27,7 +27,7 @@ public class Client : BaseEntity
     /* Foreign Key for Pets */
     public ICollection<Pet> Pets { get; set; }
     /* Foreign Key for Services */
-    public ICollection<Service> Services { get; set; }
+    public ICollection<Appointment> Appointments { get; set; }
 
     /* --------------------------------- */
 

@@ -9,7 +9,7 @@ namespace Core.Entities.Person;
 
 public class ClientAddress : BaseEntity
 {
-    public string Street { get; set; }
+    public string TypeRoad { get; set; }
     public int FirstNumber { get; set; }
     public string FirstLetter { get; set; }
     public string Bis { get; set; }
@@ -20,7 +20,6 @@ public class ClientAddress : BaseEntity
     public int ThirdNumber { get; set; }
     public string SecondCardinal { get; set; }
     public string Complement { get; set; }
-    public string Floor { get; set; }
     public string PostalCode { get; set; }
 
     /* --------- Foreign Keys ---------- */
