@@ -14,7 +14,9 @@ public class PetBred : BaseEntity
     /* --------- Foreign Keys ---------- */
 
     /* Foreign Key for Pets */
-    public Pet Pets { get; set; }
+    public ICollection<Pet> Pets { get; set; }
+
+
 
     /* --------------------------------- */
 

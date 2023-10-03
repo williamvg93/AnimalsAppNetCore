@@ -19,15 +19,15 @@ public class Appointment : BaseEntity
     /* Foreign Key for Client */
     [Required]
     public int IdClientFk { get; set; }
-    public Client Client { get; set; }
+    public Client Clients { get; set; }
     /* Foreign Key for Pet */
     [Required]
     public int IdPetFk { get; set; }
-    public Pet Pet { get; set; }
+    public Pet Pets { get; set; }
     /* Foreign Key for Service */
     [Required]
     public int IdServiceFk { get; set; }
-    public Service Service { get; set; }
+    public Service Services { get; set; }
 
     /* --------------------------------- */
 }

@@ -23,11 +23,11 @@ public class Pet : BaseEntity
     /* Foreign Key for Cliente */
     [Required]
     public int IdClientFk { get; set; }
-    public Client Client { get; set; }
+    public Client Clients { get; set; }
     /* Foreign Key for PetBred */
     [Required]
     public int IdPetBredFk { get; set; }
-    public PetBred PetBred { get; set; }
+    public PetBred PetBreds { get; set; }
     /* Foreign Key for Appointment */
     public ICollection<Appointment> Appointments { get; set; }
     /* --------------------------------- */

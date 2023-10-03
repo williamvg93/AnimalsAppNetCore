@@ -21,7 +21,7 @@ public class Client : BaseEntity
     /* --------- Foreign Keys ---------- */
 
     /* Foreign Key for ClientAddress */
-    public ClientAddress ClientAddress { get; set; }
+    public ClientAddress ClientAddresses { get; set; }
     /* Foreign Key for Client Contacts */
     public ICollection<ClientContact> ClientContacts { get; set; }
     /* Foreign Key for Pets */
