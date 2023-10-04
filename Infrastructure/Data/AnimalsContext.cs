@@ -14,11 +14,13 @@ namespace Infrastructure.Data;
 public class AnimalsContext : DbContext
 {
     public AnimalsContext(DbContextOptions options) : base(options)
-    { }
+    {
+
+    }
     public DbSet<Client> Clients { get; set; }
     public DbSet<ClientAddress> ClientAddresses { get; set; }
     public DbSet<ClientContact> ClientContacts { get; set; }
-    public DbSet<City> Citiess { get; set; }
+    public DbSet<Country> Countries { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<City> Cities { get; set; }
     public DbSet<Pet> Pets { get; set; }

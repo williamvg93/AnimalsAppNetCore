@@ -18,14 +18,13 @@ builder.Services.ConfigureCors();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-var app = builder.Build();
-
 builder.Services.AddDbContext<AnimalsContext>(options =>
 {
     string connectionStrings = builder.Configuration.GetConnectionString("MysqlConec");
     options.UseMySql(connectionStrings, ServerVersion.AutoDetect(connectionStrings));
 });
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
