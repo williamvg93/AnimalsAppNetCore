@@ -34,7 +34,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         _context = context;
     }
 
-    public ICountry Contries
+    public ICountry Countries
     {
         get
         {

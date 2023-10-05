@@ -11,7 +11,7 @@ namespace Core.Entities;
 
 public interface IUnitOfWork
 {
-    ICountry Contries { get; }
+    ICountry Countries { get; }
     IDepartment Departments { get; }
     ICity Cities { get; }
     IClient Clients { get; }
