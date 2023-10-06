@@ -12,8 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+/* Extension necesaria para limitar número de peticiones */
 builder.Services.ConfigureRatelimiting();
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
+
+/* Agregar la extension AddApplicationServices de AddApplicationServices */
 builder.Services.ConfigureCors();
 builder.Services.AddApplicationServices();
 
@@ -34,9 +38,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+/* Implementación de las Cors */
 app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
+
+/* Implementación del RateLimit */
 app.UseIpRateLimiting();
 
 app.UseAuthorization();
