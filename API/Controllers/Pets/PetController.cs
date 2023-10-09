@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos.Pets;
+using AutoMapper;
 using Core.Entities;
 using Core.Entities.Pets;
 using Microsoft.AspNetCore.Mvc;
@@ -11,20 +13,22 @@ namespace API.Controllers.Pets;
 public class PetController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public PetController(IUnitOfWork unitOfWork)
+    public PetController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     /* Get all Pets in the Database */
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<Pet>>> Get()
+    public async Task<ActionResult<IEnumerable<PetDto>>> Get()
     {
         var pets = await _unitOfWork.Pets.GetAllAsync();
-        return Ok(pets);
+        return _mapper.Map<List<PetDto>>(pets);
     }
 
     /* Get Pet By ID */
@@ -32,52 +36,55 @@ public class PetController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Pet>> Get(int id)
+    public async Task<ActionResult<PetDto>> Get(int id)
     {
         var pet = await _unitOfWork.Pets.GetByIdAsync(id);
         if (pet == null)
         {
             return NotFound();
         }
-        return pet;
+        return _mapper.Map<PetDto>(pet);
     }
 
     /* Add a new Pet in the Database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Pet>> Post(Pet pet)
+    public async Task<ActionResult<Pet>> Post(PetDto petDto)
     {
+        var pet = _mapper.Map<Pet>(petDto);
         this._unitOfWork.Pets.Add(pet);
         await _unitOfWork.SaveAsync();
         if (pet == null)
         {
             return BadRequest();
         }
-        return CreatedAtAction(nameof(Post), new { id = pet.Id }, pet);
+        petDto.Id = pet.Id;
+        return CreatedAtAction(nameof(Post), new { id = petDto.Id }, petDto);
     }
 
     /* Update Pet in the DataBase By ID  */
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Pet>> Put(int id, [FromBody] Pet pet)
+    public async Task<ActionResult<PetDto>> Put(int id, [FromBody] PetDto petDto)
     {
-        if (pet.Id == 0)
+        if (petDto.Id == 0)
         {
-            pet.Id = id;
+            petDto.Id = id;
         }
-        if (pet.Id != id)
+        if (petDto.Id != id)
         {
             return BadRequest();
         }
-        if (pet == null)
+        if (petDto == null)
         {
             return NotFound();
         }
+        var pet = _mapper.Map<Pet>(petDto);
         _unitOfWork.Pets.Update(pet);
         await _unitOfWork.SaveAsync();
-        return pet;
+        return petDto;
     }
 
     /* Delete Pet in database By ID */

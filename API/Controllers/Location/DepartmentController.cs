@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos.Location;
+using AutoMapper;
 using Core.Entities;
 using Core.Entities.Location;
 using Infrastructure.UnitOfWork;
@@ -13,20 +15,23 @@ public class DepartmentController : BaseController
 {
 
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public DepartmentController(IUnitOfWork unitOfWork)
+    public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     /* Get all department in the database */
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<Department>>> Get()
+    public async Task<ActionResult<IEnumerable<DepartmentDto>>> Get()
     {
         var departments = await _unitOfWork.Departments.GetAllAsync();
-        return Ok(departments);
+        return _mapper.Map<List<DepartmentDto>>(departments);
+
     }
 
     /* Get countrie by the iD */
@@ -34,51 +39,55 @@ public class DepartmentController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Department>> Get(int id)
+    public async Task<ActionResult<DepartmentDto>> Get(int id)
     {
         var department = await _unitOfWork.Departments.GetByIdAsync(id);
         if (department == null)
         {
             return NotFound();
         }
-        return department;
+        return _mapper.Map<DepartmentDto>(department);
     }
+
     /* Add a new department in the database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Department>> Post(Department department)
+    public async Task<ActionResult<Department>> Post(DepartmentDto departmentDto)
     {
+        var department = _mapper.Map<Department>(departmentDto);
         this._unitOfWork.Departments.Add(department);
         await _unitOfWork.SaveAsync();
         if (department == null)
         {
             return BadRequest();
         }
-        return CreatedAtAction(nameof(Post), new { id = department.Id }, department);
+        departmentDto.Id = department.Id;
+        return CreatedAtAction(nameof(Post), new { id = departmentDto.Id }, departmentDto);
     }
 
     /* Update department in the DataBase By ID  */
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Department>> Put(int id, [FromBody] Department department)
+    public async Task<ActionResult<DepartmentDto>> Put(int id, [FromBody] DepartmentDto departmentDto)
     {
-        if (department.Id == 0)
+        if (departmentDto.Id == 0)
         {
-            department.Id = id;
+            departmentDto.Id = id;
         }
-        if (department.Id != id)
+        if (departmentDto.Id != id)
         {
             return BadRequest();
         }
-        if (department == null)
+        if (departmentDto == null)
         {
             return NotFound();
         }
+        var department = _mapper.Map<Department>(departmentDto);
         _unitOfWork.Departments.Update(department);
         await _unitOfWork.SaveAsync();
-        return department;
+        return departmentDto;
     }
 
     /* Delete department in database By ID */

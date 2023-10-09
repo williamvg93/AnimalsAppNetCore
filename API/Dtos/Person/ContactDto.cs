@@ -7,5 +7,6 @@ namespace API.Dtos.Person;
 
 public class ContactDto
 {
+    public int Id { get; set; }
     public string Number { get; set; }
 }

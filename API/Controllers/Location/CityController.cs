@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos.Location;
+using AutoMapper;
 using Core.Entities;
 using Core.Entities.Location;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,20 +14,22 @@ namespace API.Controllers.Location;
 public class CityController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public CityController(IUnitOfWork unitOfWork)
+    public CityController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     /* Get all Cities in the Database */
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<City>>> Get()
+    public async Task<ActionResult<IEnumerable<CityDto>>> Get()
     {
         var cities = await _unitOfWork.Cities.GetAllAsync();
-        return Ok(cities);
+        return _mapper.Map<List<CityDto>>(cities);
     }
 
     /* Get City By ID */
@@ -33,52 +37,55 @@ public class CityController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<City>> Get(int id)
+    public async Task<ActionResult<CityDto>> Get(int id)
     {
         var city = await _unitOfWork.Cities.GetByIdAsync(id);
         if (city == null)
         {
             return NotFound();
         }
-        return city;
+        return _mapper.Map<CityDto>(city);
     }
 
     /* Add a new City in the Database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<City>> Post(City city)
+    public async Task<ActionResult<City>> Post(CityDto cityDto)
     {
+        var city = _mapper.Map<City>(cityDto);
         this._unitOfWork.Cities.Add(city);
         await _unitOfWork.SaveAsync();
         if (city == null)
         {
             return BadRequest();
         }
-        return CreatedAtAction(nameof(Post), new { id = city.Id }, city);
+        cityDto.Id = city.Id;
+        return CreatedAtAction(nameof(Post), new { id = cityDto.Id }, cityDto);
     }
 
     /* Update City in the DataBase By ID  */
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<City>> Put(int id, [FromBody] City city)
+    public async Task<ActionResult<CityDto>> Put(int id, [FromBody] CityDto cityDto)
     {
-        if (city.Id == 0)
+        if (cityDto.Id == 0)
         {
-            city.Id = id;
+            cityDto.Id = id;
         }
-        if (city.Id != id)
+        if (cityDto.Id != id)
         {
             return BadRequest();
         }
-        if (city == null)
+        if (cityDto == null)
         {
             return NotFound();
         }
+        var city = _mapper.Map<City>(cityDto);
         _unitOfWork.Cities.Update(city);
         await _unitOfWork.SaveAsync();
-        return city;
+        return cityDto;
     }
 
     /* Delete Country in database By ID */

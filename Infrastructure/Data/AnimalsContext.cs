@@ -9,6 +9,7 @@ using Core.Entities.Pets;
 using Core.Entities.ProvidedServices;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Infrastructure.Data;
 
 public class AnimalsContext : DbContext

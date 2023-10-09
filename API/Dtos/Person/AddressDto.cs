@@ -7,6 +7,7 @@ namespace API.Dtos.Person;
 
 public class AddressDto
 {
+    public int Id { get; set; }
     public int FirstNumber { get; set; }
     public string FirstLetter { get; set; }
 }
