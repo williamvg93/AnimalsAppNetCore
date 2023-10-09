@@ -18,16 +18,16 @@ namespace Infrastructure.UnitOfWork;
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly AnimalsContext _context;
-    private ICountry _countries;
-    private IDepartment _departments;
-    private ICity _cities;
-    private IClient _clients;
-    private IClientAddress _addresses;
-    private IClientContact _contacts;
-    private IPet _pets;
-    private IPetBred _petbreds;
-    private IAppointment _appointments;
-    private IService _services;
+    private CountryRepo _countries;
+    private DepartmentRepo _departments;
+    private CityRepo _cities;
+    private ClientRepo _clients;
+    private ClientAddressRepo _addresses;
+    private ClientContactRepo _contacts;
+    private PetRepo _pets;
+    private PetBredRepo _petbreds;
+    private AppointmentRepo _appointments;
+    private ServiceRepo _services;
 
     public UnitOfWork(AnimalsContext context)
     {

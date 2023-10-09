@@ -58,4 +58,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         _context.Set<T>().Update(entity);
     }
+
+    public virtual async Task<(int dataCount, IEnumerable<T> data)> GetAllAsync(int pageIndex, int pageSize, string search)
+    {
+        var dataCount = await _context.Set<T>().CountAsync();
+        var data = await _context.Set<T>().Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+        return (dataCount, data);
+    }
 }

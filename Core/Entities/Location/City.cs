@@ -14,11 +14,10 @@ public class City : BaseEntity
 
     /* --------- Foreign Keys ---------- */
 
-    /* Foreign Key for Country */
+    /* Foreign Key for Department */
     [Required]
     public int IdDepartFk { get; set; }
     public Department Departments { get; set; }
-
     /* --------------------------------- */
     public ClientAddress ClientAddresses { get; set; }
 }
