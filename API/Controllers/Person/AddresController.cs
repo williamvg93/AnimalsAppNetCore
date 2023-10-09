@@ -49,6 +49,7 @@ public class AddresController : BaseController
     /* Add a new Address in the Database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ClientAddress>> Post(AddressDto addressDto)
     {
@@ -69,19 +70,20 @@ public class AddresController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AddressDto>> Put(int id, [FromBody] AddressDto addressDto)
     {
-        if (addressDto.Id == 0)
+        var address = _mapper.Map<ClientAddress>(addressDto);
+        if (address.Id == 0)
         {
-            addressDto.Id = id;
+            address.Id = id;
         }
-        if (addressDto.Id != id)
+        if (address.Id != id)
         {
             return BadRequest();
         }
-        if (addressDto == null)
+        if (address == null)
         {
             return NotFound();
         }
-        var address = _mapper.Map<ClientAddress>(addressDto);
+        addressDto.Id = address.Id;
         _unitOfWork.Addresses.Update(address);
         await _unitOfWork.SaveAsync();
         return addressDto;

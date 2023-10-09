@@ -52,6 +52,7 @@ public class DepartmentController : BaseController
     /* Add a new department in the database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Department>> Post(DepartmentDto departmentDto)
     {
@@ -72,19 +73,20 @@ public class DepartmentController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<DepartmentDto>> Put(int id, [FromBody] DepartmentDto departmentDto)
     {
-        if (departmentDto.Id == 0)
+        var department = _mapper.Map<Department>(departmentDto);
+        if (department.Id == 0)
         {
-            departmentDto.Id = id;
+            department.Id = id;
         }
-        if (departmentDto.Id != id)
+        if (department.Id != id)
         {
             return BadRequest();
         }
-        if (departmentDto == null)
+        if (department == null)
         {
             return NotFound();
         }
-        var department = _mapper.Map<Department>(departmentDto);
+        departmentDto.Id = department.Id;
         _unitOfWork.Departments.Update(department);
         await _unitOfWork.SaveAsync();
         return departmentDto;

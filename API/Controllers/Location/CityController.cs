@@ -70,19 +70,20 @@ public class CityController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CityDto>> Put(int id, [FromBody] CityDto cityDto)
     {
-        if (cityDto.Id == 0)
+        var city = _mapper.Map<City>(cityDto);
+        if (city.Id == 0)
         {
-            cityDto.Id = id;
+            city.Id = id;
         }
-        if (cityDto.Id != id)
+        if (city.Id != id)
         {
             return BadRequest();
         }
-        if (cityDto == null)
+        if (city == null)
         {
             return NotFound();
         }
-        var city = _mapper.Map<City>(cityDto);
+        cityDto.Id = city.Id;
         _unitOfWork.Cities.Update(city);
         await _unitOfWork.SaveAsync();
         return cityDto;

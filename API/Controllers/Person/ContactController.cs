@@ -69,19 +69,20 @@ public class ContactController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ContactDto>> Put(int id, [FromBody] ContactDto contactDto)
     {
-        if (contactDto.Id == 0)
+        var contact = _mapper.Map<ClientContact>(contactDto);
+        if (contact.Id == 0)
         {
-            contactDto.Id = id;
+            contact.Id = id;
         }
-        if (contactDto.Id != id)
+        if (contact.Id != id)
         {
             return BadRequest();
         }
-        if (contactDto == null)
+        if (contact == null)
         {
             return NotFound();
         }
-        var contact = _mapper.Map<ClientContact>(contactDto);
+        contactDto.Id = contact.Id;
         _unitOfWork.Contacts.Update(contact);
         await _unitOfWork.SaveAsync();
         return contactDto;

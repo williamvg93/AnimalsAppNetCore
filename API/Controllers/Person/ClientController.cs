@@ -49,6 +49,7 @@ public class ClientController : BaseController
     /* Add a new Client in the Database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Client>> Post(ClientDto clientDto)
     {
@@ -69,19 +70,20 @@ public class ClientController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ClientDto>> Put(int id, [FromBody] ClientDto clientDto)
     {
-        if (clientDto.Id == 0)
+        var client = _mapper.Map<Client>(clientDto);
+        if (client.Id == 0)
         {
-            clientDto.Id = id;
+            client.Id = id;
         }
-        if (clientDto.Id != id)
+        if (client.Id != id)
         {
             return BadRequest();
         }
-        if (clientDto == null)
+        if (client == null)
         {
             return NotFound();
         }
-        var client = _mapper.Map<Client>(clientDto);
+        clientDto.Id = client.Id;
         _unitOfWork.Clients.Update(client);
         await _unitOfWork.SaveAsync();
         return clientDto;

@@ -52,6 +52,7 @@ public class CountryController : BaseController
     /* Add a new Country in the database */
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Country>> Post(CountryDto countryDto)
     {
@@ -73,19 +74,20 @@ public class CountryController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CountryDto>> Put(int id, [FromBody] CountryDto countryDto)
     {
-        if (countryDto.Id == 0)
+        var country = _mapper.Map<Country>(countryDto);
+        if (country.Id == 0)
         {
-            countryDto.Id = id;
+            country.Id = id;
         }
-        if (countryDto.Id != id)
+        if (country.Id != id)
         {
             return BadRequest();
         }
-        if (countryDto == null)
+        if (country == null)
         {
             return NotFound();
         }
-        var country = _mapper.Map<Country>(countryDto);
+        countryDto.Id = country.Id;
         _unitOfWork.Countries.Update(country);
         await _unitOfWork.SaveAsync();
         return countryDto;

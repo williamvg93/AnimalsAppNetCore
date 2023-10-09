@@ -69,19 +69,20 @@ public class BredController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<BredDto>> Put(int id, [FromBody] BredDto bredDto)
     {
-        if (bredDto.Id == 0)
+        var bred = _mapper.Map<PetBred>(bredDto);
+        if (bred.Id == 0)
         {
-            bredDto.Id = id;
+            bred.Id = id;
         }
-        if (bredDto.Id != id)
+        if (bred.Id != id)
         {
             return BadRequest();
         }
-        if (bredDto == null)
+        if (bred == null)
         {
             return NotFound();
         }
-        var bred = _mapper.Map<PetBred>(bredDto);
+        bredDto.Id = bred.Id;
         _unitOfWork.PetBreds.Update(bred);
         await _unitOfWork.SaveAsync();
         return bredDto;
