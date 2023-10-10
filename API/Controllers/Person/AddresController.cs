@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos.Person;
+using API.Dtos.Post.Person;
 using AutoMapper;
 using Core.Entities;
 using Core.Entities.Person;
@@ -51,7 +52,7 @@ public class AddresController : BaseController
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ClientAddress>> Post(AddressDto addressDto)
+    public async Task<ActionResult<ClientAddress>> Post(AddressPostDto addressDto)
     {
         var address = _mapper.Map<ClientAddress>(addressDto);
         this._unitOfWork.Addresses.Add(address);
@@ -68,7 +69,7 @@ public class AddresController : BaseController
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<AddressDto>> Put(int id, [FromBody] AddressDto addressDto)
+    public async Task<ActionResult<AddressPostDto>> Put(int id, [FromBody] AddressPostDto addressDto)
     {
         var address = _mapper.Map<ClientAddress>(addressDto);
         if (address.Id == 0)

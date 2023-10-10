@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos.Post.ProvidedServices;
 using API.Dtos.ProvidedServices;
 using AutoMapper;
 using Core.Entities;
@@ -51,7 +52,7 @@ public class ServiceController : BaseController
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Service>> Post(ServiceDto serviceDto)
+    public async Task<ActionResult<Service>> Post(ServicePostDto serviceDto)
     {
         var service = _mapper.Map<Service>(serviceDto);
         this._unitOfWork.Services.Add(service);
@@ -67,7 +68,7 @@ public class ServiceController : BaseController
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ServiceDto>> Put(int id, [FromBody] ServiceDto serviceDto)
+    public async Task<ActionResult<ServicePostDto>> Put(int id, [FromBody] ServicePostDto serviceDto)
     {
         var service = _mapper.Map<Service>(serviceDto);
         if (service.Id == 0)

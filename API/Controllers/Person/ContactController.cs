@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos.Person;
+using API.Dtos.Post.Person;
 using AutoMapper;
 using Core.Entities;
 using Core.Entities.Person;
@@ -50,7 +51,7 @@ public class ContactController : BaseController
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ClientContact>> Post(ContactDto contactDto)
+    public async Task<ActionResult<ClientContact>> Post(ContactPostDto contactDto)
     {
         var contact = _mapper.Map<ClientContact>(contactDto);
         this._unitOfWork.Contacts.Add(contact);
@@ -67,7 +68,7 @@ public class ContactController : BaseController
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ContactDto>> Put(int id, [FromBody] ContactDto contactDto)
+    public async Task<ActionResult<ContactPostDto>> Put(int id, [FromBody] ContactPostDto contactDto)
     {
         var contact = _mapper.Map<ClientContact>(contactDto);
         if (contact.Id == 0)

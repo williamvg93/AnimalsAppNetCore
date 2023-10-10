@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos.Pets;
+using API.Dtos.Post.Pets;
 using AutoMapper;
 using Core.Entities;
 using Core.Entities.Pets;
@@ -50,7 +51,7 @@ public class PetController : BaseController
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Pet>> Post(PetDto petDto)
+    public async Task<ActionResult<Pet>> Post(PetPostDto petDto)
     {
         var pet = _mapper.Map<Pet>(petDto);
         this._unitOfWork.Pets.Add(pet);
@@ -67,7 +68,7 @@ public class PetController : BaseController
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PetDto>> Put(int id, [FromBody] PetDto petDto)
+    public async Task<ActionResult<PetPostDto>> Put(int id, [FromBody] PetPostDto petDto)
     {
         var pet = _mapper.Map<Pet>(petDto);
         if (pet.Id == 0)
